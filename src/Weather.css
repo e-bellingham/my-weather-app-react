@@ -1,0 +1,45 @@
+.form {
+  padding: 10px;
+  margin: 0 auto;
+}
+button {
+  border-radius: 4px;
+  margin-left: 5px;
+}
+
+.dateDayTime {
+  text-align: center;
+  color: rgb(45, 45, 44);
+  font-size: 18px;
+  height: 55px;
+  font-weight: 200px;
+}
+.threeColumns {
+  display: grid;
+  grid-template-columns: 1fr 1fr 2fr;
+  gap: 10px;
+}
+.units {
+  color: white;
+  top: -32px;
+  float: right;
+  text-decoration: none;
+}
+
+strong {
+  font-size: 60px;
+  font-weight: 600;
+  text-align: start;
+}
+a {
+  text-decoration: none;
+  color: white;
+}
+ul {
+  list-style-type: none;
+  text-align: left;
+}
+.currentWeatherInfo span {
+  color: white;
+  font-weight: 600;
+}
