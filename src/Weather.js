@@ -75,10 +75,10 @@ export default function Weather() {
           <div className="currentWeatherInfo">
             <strong>{Math.round(weather.temperature)}</strong>
             <small className="units">
-              <a href="#" id="fahrenheit-link">
+              <a href="/" id="fahrenheit-link">
                 °F{" "}
               </a>
-              |<a href="#"> °C </a>
+              |<a href="/"> °C </a>
             </small>
           </div>
           <div className="currentWeather">
