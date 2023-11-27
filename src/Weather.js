@@ -16,7 +16,9 @@ export default function Weather() {
     time: null,
     icon: null,
   });
-
+  useEffect(() => {
+    fetchWeather("Monterey");
+  }, [unit]);
   const fetchWeather = (selectedCity) => {
     let url = `https://api.openweathermap.org/data/2.5/weather?q=${selectedCity}&appid=535cacbb3f8a0df0aeb4790235b9541f&units=${unit}`;
     axios.get(url).then((response) => {
@@ -24,10 +26,6 @@ export default function Weather() {
       fetchTemperature(selectedCity, unit);
     });
   };
-
-  useEffect(() => {
-    fetchWeather(city);
-  }, [city, unit]);
 
   function fetchTemperature(selectedCity, currentUnit) {
     let url = `https://api.openweathermap.org/data/2.5/weather?q=${selectedCity}&appid=535cacbb3f8a0df0aeb4790235b9541f&units=${currentUnit}`;
