@@ -18,16 +18,17 @@ export default function Weather() {
   });
 
   useEffect(() => {
+    const fetchWeather = (selectedCity) => {
+      let url = `https://api.openweathermap.org/data/2.5/weather?q=${selectedCity}&appid=535cacbb3f8a0df0aeb4790235b9541f&units=${unit}`;
+      axios.get(url).then((response) => {
+        updateWeatherData(response);
+        fetchTemperature(selectedCity, unit);
+      });
+    };
+
     fetchWeather(city);
   }, [city, unit]);
 
-  function fetchWeather(selectedCity) {
-    let url = `https://api.openweathermap.org/data/2.5/weather?q=${selectedCity}&appid=535cacbb3f8a0df0aeb4790235b9541f`;
-    axios.get(url).then((response) => {
-      updateWeatherData(response);
-      fetchTemperature(selectedCity, unit);
-    });
-  }
   function fetchTemperature(selectedCity, currentUnit) {
     let url = `https://api.openweathermap.org/data/2.5/weather?q=${selectedCity}&appid=535cacbb3f8a0df0aeb4790235b9541f&units=${currentUnit}`;
     axios.get(url).then((response) => {
@@ -139,6 +140,7 @@ export default function Weather() {
             <strong>{Math.round(weather.temperature)}</strong>
             <small className="units">
               <a
+                href="/"
                 className={unit === "imperial" ? "active-unit" : ""}
                 onClick={() => setUnit("imperial")}
               >
@@ -146,6 +148,7 @@ export default function Weather() {
               </a>
 
               <a
+                href="/"
                 className={unit === "metric" ? "active-unit" : ""}
                 onClick={() => setUnit("metric")}
               >
