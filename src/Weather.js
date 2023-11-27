@@ -5,7 +5,7 @@ import "./Weather.css";
 export default function Weather() {
   let [city, setCity] = useState("Monterey");
   let [unit, setUnit] = useState("imperial");
-  let [loaded, setLoading] = useState("flase");
+  let [loaded, setLoading] = useState("false");
   let [weather, setWeather] = useState({
     temperature: null,
     windSpeed: null,
@@ -77,50 +77,50 @@ export default function Weather() {
           placeholder="Enter a city.."
           onChange={updateCity}
         />
-        <button className="city-button">
+        <button className="cityButton">
           <i className="fa-solid fa-magnifying-glass"></i>
         </button>
       </form>
       <div className="quick-links">
-        <a
-          href="/"
+        <button
+          className="cityButton"
           onClick={(e) => {
             e.preventDefault();
             fetchWeather("Monterey");
           }}
         >
           Monterey
-        </a>{" "}
+        </button>{" "}
         |
-        <a
-          href="/"
+        <button
+          className="cityButton"
           onClick={(e) => {
             e.preventDefault();
             fetchWeather("New York");
           }}
         >
           New York
-        </a>{" "}
+        </button>{" "}
         |
-        <a
-          href="/"
+        <button
+          className="cityButton"
           onClick={(e) => {
             e.preventDefault();
             fetchWeather("Paris");
           }}
         >
           Paris
-        </a>{" "}
+        </button>{" "}
         |
-        <a
-          href="/"
+        <button
+          className="cityButton"
           onClick={(e) => {
             e.preventDefault();
             fetchWeather("London");
           }}
         >
           London
-        </a>
+        </button>
       </div>
     </div>
   );
@@ -134,7 +134,7 @@ export default function Weather() {
         <h4>
           Date: {weather.date} | Time:{weather.time}
         </h4>
-        <hz />
+
         <div className="threeColumns">
           <div className="currentWeather">
             <img
