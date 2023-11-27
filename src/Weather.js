@@ -17,15 +17,15 @@ export default function Weather() {
     icon: null,
   });
 
-  useEffect(() => {
-    const fetchWeather = (selectedCity) => {
-      let url = `https://api.openweathermap.org/data/2.5/weather?q=${selectedCity}&appid=535cacbb3f8a0df0aeb4790235b9541f&units=${unit}`;
-      axios.get(url).then((response) => {
-        updateWeatherData(response);
-        fetchTemperature(selectedCity, unit);
-      });
-    };
+  const fetchWeather = (selectedCity) => {
+    let url = `https://api.openweathermap.org/data/2.5/weather?q=${selectedCity}&appid=535cacbb3f8a0df0aeb4790235b9541f&units=${unit}`;
+    axios.get(url).then((response) => {
+      updateWeatherData(response);
+      fetchTemperature(selectedCity, unit);
+    });
+  };
 
+  useEffect(() => {
     fetchWeather(city);
   }, [city, unit]);
 
