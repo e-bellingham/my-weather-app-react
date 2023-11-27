@@ -63,12 +63,6 @@ export default function Weather() {
     setCity(event.target.value);
   }
 
-  function toggleUnit() {
-    const newUnit = unit === "imperial" ? "metric" : "imperial";
-    setUnit(newUnit);
-    fetchTemperature(city, newUnit);
-  }
-
   let form = (
     <div className="form">
       <form onSubmit={handleSubmit}>
@@ -91,7 +85,6 @@ export default function Weather() {
         >
           Monterey
         </button>{" "}
-        |
         <button
           className="cityButton"
           onClick={(e) => {
@@ -101,7 +94,6 @@ export default function Weather() {
         >
           New York
         </button>{" "}
-        |
         <button
           className="cityButton"
           onClick={(e) => {
@@ -111,7 +103,6 @@ export default function Weather() {
         >
           Paris
         </button>{" "}
-        |
         <button
           className="cityButton"
           onClick={(e) => {
