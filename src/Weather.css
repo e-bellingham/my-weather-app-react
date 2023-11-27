@@ -24,14 +24,11 @@ botton:hover {
   font-size: 12px;
   font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
     "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
-  margin-top: 13px;
+  margin-top: 22px;
   margin-bottom: 21px;
   font-weight: 600;
 }
-.quick-links a {
-  margin: 15px;
-  color: #d2e7ff;
-}
+
 .quick-links a:hover {
   color: #9bffb5;
 
@@ -42,7 +39,7 @@ h3 {
   font-weight: 600;
   color: white;
   font-size: 61px;
-  margin-top: -6px;
+  margin-top: 4px;
   margin-bottom: 12px;
 }
 h4 {
@@ -101,4 +98,18 @@ img {
   padding: 0;
 
   align-items: center;
+}
+@media screen and (max-width: 400px) {
+  .quick-links {
+    display: grid;
+  }
+  .cityButton {
+    margin-top: 10px;
+  }
+  .threeColumns {
+    grid-template-columns: 1fr;
+  }
+  .units {
+    float: none;
+  }
 }
