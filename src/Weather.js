@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./Weather.css";
 
 export default function Weather() {
-  let [city, setCity] = useState("");
+  let [city, setCity] = useState("Monterey");
+  let [unit, setUnit] = useState("imperial");
+  let [loaded, setLoading] = useState("flase");
   let [weather, setWeather] = useState({
     temperature: null,
     windSpeed: null,
@@ -12,33 +14,61 @@ export default function Weather() {
     location: null,
     date: null,
     time: null,
+    icon: null,
   });
-  let [loaded, setLoading] = useState("flase");
 
-  function displayWeather(response) {
-    setLoading(true);
+  useEffect(() => {
+    fetchWeather(city);
+  }, [city, unit]);
+
+  function fetchWeather(selectedCity) {
+    let url = `https://api.openweathermap.org/data/2.5/weather?q=${selectedCity}&appid=535cacbb3f8a0df0aeb4790235b9541f`;
+    axios.get(url).then((response) => {
+      updateWeatherData(response);
+      fetchTemperature(selectedCity, unit);
+    });
+  }
+  function fetchTemperature(selectedCity, currentUnit) {
+    let url = `https://api.openweathermap.org/data/2.5/weather?q=${selectedCity}&appid=535cacbb3f8a0df0aeb4790235b9541f&units=${currentUnit}`;
+    axios.get(url).then((response) => {
+      setWeather((prevWeather) => ({
+        ...prevWeather,
+        temperature: response.data.main.temp,
+      }));
+      setLoading(true);
+    });
+  }
+
+  function updateWeatherData(response) {
     let date = new Date(response.data.dt * 1000);
+    let formattedTime = date.toLocaleTimeString("en-US");
     let formattedDate = date.toLocaleDateString("en-US");
-
     setWeather({
-      temperature: response.data.main.temp,
+      ...weather,
       windSpeed: response.data.wind.speed,
       windDirection: response.data.wind.deg,
       humidity: response.data.main.humidity,
       location: response.data.name,
       date: formattedDate,
+      time: formattedTime,
+      icon: `https://openweathermap.org/img/w/${response.data.weather[0].icon}.png`,
     });
   }
-
   function handleSubmit(event) {
     event.preventDefault();
-    let url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=535cacbb3f8a0df0aeb4790235b9541f&units=imperial`;
-    axios.get(url).then(displayWeather);
+    fetchWeather(city);
   }
 
   function updateCity(event) {
     setCity(event.target.value);
   }
+
+  function toggleUnit() {
+    const newUnit = unit === "imperial" ? "metric" : "imperial";
+    setUnit(newUnit);
+    fetchTemperature(city, newUnit);
+  }
+
   let form = (
     <div className="form">
       <form onSubmit={handleSubmit}>
@@ -51,6 +81,47 @@ export default function Weather() {
           <i className="fa-solid fa-magnifying-glass"></i>
         </button>
       </form>
+      <div className="quick-links">
+        <a
+          href="/"
+          onClick={(e) => {
+            e.preventDefault();
+            fetchWeather("Monterey");
+          }}
+        >
+          Monterey
+        </a>{" "}
+        |
+        <a
+          href="/"
+          onClick={(e) => {
+            e.preventDefault();
+            fetchWeather("New York");
+          }}
+        >
+          New York
+        </a>{" "}
+        |
+        <a
+          href="/"
+          onClick={(e) => {
+            e.preventDefault();
+            fetchWeather("Paris");
+          }}
+        >
+          Paris
+        </a>{" "}
+        |
+        <a
+          href="/"
+          onClick={(e) => {
+            e.preventDefault();
+            fetchWeather("London");
+          }}
+        >
+          London
+        </a>
+      </div>
     </div>
   );
 
@@ -59,15 +130,16 @@ export default function Weather() {
       <div>
         {form}
 
-        <h3 className="dateDayTime">
-          {weather.location} | {weather.date}|<span></span>
-        </h3>
+        <h3>{weather.location}</h3>
+        <h4>
+          Date: {weather.date} | Time:{weather.time}
+        </h4>
+        <hz />
         <div className="threeColumns">
           <div className="currentWeather">
-            {" "}
             <img
-              src="https://ssl.gstatic.com/onebox/weather/64/sunny.png"
-              alt="clear-weather"
+              src={weather.icon}
+              alt="weather-icon"
               className="float-left"
               id="icon"
             />
@@ -75,21 +147,30 @@ export default function Weather() {
           <div className="currentWeatherInfo">
             <strong>{Math.round(weather.temperature)}</strong>
             <small className="units">
-              <a href="/" id="fahrenheit-link">
-                °F{" "}
+              <a
+                className={unit === "imperial" ? "active-unit" : ""}
+                onClick={() => setUnit("imperial")}
+              >
+                °F |
               </a>
-              |<a href="/"> °C </a>
+
+              <a
+                className={unit === "metric" ? "active-unit" : ""}
+                onClick={() => setUnit("metric")}
+              >
+                °C
+              </a>
             </small>
           </div>
           <div className="currentWeather">
             <ul className="currentWeatherInfo">
               <li>
                 <span>Wind: </span>
-                {Math.round(weather.windSpeed)}/{weather.windDirection}
+                {Math.round(weather.windSpeed)} kts / {weather.windDirection}
               </li>
               <li>
                 <span>Humidity: </span>
-                {weather.humidity}
+                {weather.humidity} %
               </li>
             </ul>
           </div>
