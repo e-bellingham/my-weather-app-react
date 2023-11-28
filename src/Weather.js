@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "./Weather.css";
+import Loader from "./components/Loader/Loader";
 
 export default function Weather() {
   let [city, setCity] = useState("Monterey");
@@ -16,13 +17,19 @@ export default function Weather() {
     time: null,
     icon: null,
   });
+  const [removeLoader, setRemoveLoader] = useState(true)
 
   const fetchWeather = (selectedCity) => {
+    setRemoveLoader(false)
     let url = `https://api.openweathermap.org/data/2.5/weather?q=${selectedCity}&appid=535cacbb3f8a0df0aeb4790235b9541f&units=${unit}`;
     axios.get(url).then((response) => {
       updateWeatherData(response);
       fetchTemperature(selectedCity, unit);
-    });
+      setRemoveLoader(true)
+    })
+    .catch(()=>{
+      setRemoveLoader(true)
+    })
   };
 
   function fetchTemperature(selectedCity, currentUnit) {
@@ -165,6 +172,7 @@ export default function Weather() {
             </ul>
           </div>
         </div>
+        {!removeLoader && <Loader/>}
       </div>
     );
   } else {
