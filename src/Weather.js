@@ -3,6 +3,24 @@ import axios from "axios";
 import "./Weather.css";
 
 export default function Weather() {
+  const [rawTemperature, setRawTemperature] = useState(null);
+  const fetchWeather = (selectedCity, currentUnit) => {
+    let url = `https://api.openweathermap.org/data/2.5/weather?q=${selectedCity}&appid=535cacbb3f8a0df0aeb4790235b9541f&units=${currentUnit}`;
+    axios.get(url).then((response) => {
+      setRawTemperature(response.data.main.temp);
+      updateWeatherData(response);
+    });
+  };
+  const convertToFahrenheit = (kelvin) => {
+    return ((kelvin - 273.15) * 9) / 5 + 32;
+  };
+  const convertToCelsius = (kelvin) => {
+    return kelvin - 273.15;
+  };
+  function handleUnitChange(newUnit) {
+    setUnit(newUnit);
+  }
+
   let [city, setCity] = useState("Monterey");
   let [unit, setUnit] = useState("imperial");
   let [loaded, setLoading] = useState("false");
@@ -17,29 +35,11 @@ export default function Weather() {
     icon: null,
   });
 
-  const fetchWeather = (selectedCity) => {
-    let url = `https://api.openweathermap.org/data/2.5/weather?q=${selectedCity}&appid=535cacbb3f8a0df0aeb4790235b9541f&units=${unit}`;
-    axios.get(url).then((response) => {
-      updateWeatherData(response);
-      fetchTemperature(selectedCity, unit);
-    });
-  };
-
-  function fetchTemperature(selectedCity, currentUnit) {
-    let url = `https://api.openweathermap.org/data/2.5/weather?q=${selectedCity}&appid=535cacbb3f8a0df0aeb4790235b9541f&units=${currentUnit}`;
-    axios.get(url).then((response) => {
-      setWeather((prevWeather) => ({
-        ...prevWeather,
-        temperature: response.data.main.temp,
-      }));
-      setLoading(true);
-    });
-  }
-
   function updateWeatherData(response) {
-    let date = new Date(response.data.dt * 1000);
-    let formattedTime = date.toLocaleTimeString("en-US");
-    let formattedDate = date.toLocaleDateString("en-US");
+    let timezoneOffset = response.data.timezone;
+    let localTime = new Date((response.data.dt + timezoneOffset) * 1000);
+    let formattedTime = localTime.toLocaleTimeString("en-US");
+    let formattedDate = localTime.toLocaleDateString("en-US");
     setWeather({
       ...weather,
       windSpeed: response.data.wind.speed,
@@ -50,6 +50,7 @@ export default function Weather() {
       time: formattedTime,
       icon: `https://openweathermap.org/img/w/${response.data.weather[0].icon}.png`,
     });
+    setLoading(true);
   }
   function handleSubmit(event) {
     event.preventDefault();
@@ -114,6 +115,14 @@ export default function Weather() {
   );
 
   if (loaded) {
+    let displayTemperature;
+    if (unit === "imperial") {
+      displayTemperature = convertToFahrenheit(rawTemperature);
+    } else if (unit === "metric") {
+      displayTemperature = convertToCelsius(rawTemperature);
+    } else {
+      displayTemperature = rawTemperature;
+    }
     return (
       <div>
         {form}
@@ -133,20 +142,25 @@ export default function Weather() {
             />
           </div>
           <div className="currentWeatherInfo">
-            <strong>{Math.round(weather.temperature)}</strong>
+            <strong>{Math.round(displayTemperature)}</strong>
             <small className="units">
               <a
                 href="/"
                 className={unit === "imperial" ? "active-unit" : ""}
-                onClick={() => setUnit("imperial")}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleUnitChange("imperial");
+                }}
               >
                 °F |
               </a>
-
               <a
                 href="/"
                 className={unit === "metric" ? "active-unit" : ""}
-                onClick={() => setUnit("metric")}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleUnitChange("metric");
+                }}
               >
                 °C
               </a>
