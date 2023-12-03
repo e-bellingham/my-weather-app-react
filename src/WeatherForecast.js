@@ -3,7 +3,7 @@ import "./WeatherForecast.css";
 
 export default function WeatherForecast() {
   return (
-    <div className="WeatherForecast">
+    <div>
       <div className="row">
         <div className="col">
           <div className="WeatherForecast-time">Thurs</div>
