@@ -57,10 +57,13 @@ export default class WeatherForecast extends Component {
                 />
                 <div className="WeatherForecast-temperatures">
                   <span className="WeatherForecast-temperature-max">
-                    {Math.round(day.main.temp_max)}°C
+                    {Math.round(day.main.temp_max)}
+                    <small>°C </small>/
                   </span>
                   <span className="WeatherForecast-temperature-min">
-                    {Math.round(day.main.temp_min)}°C
+                    {" "}
+                    {Math.round(day.main.temp_min)}
+                    <small>°C</small>
                   </span>
                 </div>
               </div>

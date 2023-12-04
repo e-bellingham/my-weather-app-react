@@ -28,8 +28,16 @@ body {
   background-size: cover;
 }
 h1 {
-  color: #324762;
+  color: #f3db82;
   font-size: 23px;
   margin-top: 51px;
+  font-weight: 600;
+}
+footer {
+  padding-top: 21px;
+  color: #f3db82;
+}
+footer a {
+  color: #f3db82;
   font-weight: 600;
 }
