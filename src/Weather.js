@@ -5,7 +5,7 @@ import "./Weather.css";
 export default function Weather() {
   const [rawTemperature, setRawTemperature] = useState(null);
   const fetchWeather = (selectedCity, currentUnit) => {
-    let url = `https://api.openweathermap.org/data/2.5/weather?q=${selectedCity}&appid=535cacbb3f8a0df0aeb4790235b9541f&units=${currentUnit}`;
+    let url = `https://api.openweathermap.org/data/2.5/weather?q=${selectedCity}&appid=0f8bc384a7c31b717a18cfe38a95ae06&units=${currentUnit}`;
     axios.get(url).then((response) => {
       setRawTemperature(response.data.main.temp);
       updateWeatherData(response);
