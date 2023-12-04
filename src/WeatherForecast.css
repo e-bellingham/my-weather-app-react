@@ -6,6 +6,7 @@ div .col {
   margin: 6px;
   padding: 8px;
   border: 2px solid #81b5fe;
+  border-radius: 10px;
 }
 small {
   font-size: 10px;
