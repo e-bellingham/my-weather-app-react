@@ -7,7 +7,6 @@ export default class WeatherForecast extends Component {
     super(props);
     this.state = {
       forecast: [],
-      selectedCity: "London",
     };
   }
 
@@ -15,9 +14,16 @@ export default class WeatherForecast extends Component {
     this.fetchForecastData();
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.city !== prevProps.city) {
+      this.fetchForecastData();
+    }
+  }
   fetchForecastData() {
     const apiKey = `0f8bc384a7c31b717a18cfe38a95ae06`;
-    const apiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${this.state.selectedCity}&appid=${apiKey}&units=metric`;
+    const apiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(
+      this.props.city
+    )}&appid=${apiKey}&units=metric`;
 
     axios.get(apiUrl).then((response) => {
       this.setState({ forecast: response.data.list });

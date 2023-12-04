@@ -2,10 +2,9 @@ import React, { useState } from "react";
 import axios from "axios";
 import "./Weather.css";
 
-export default function Weather() {
-  const [rawTemperature, setRawTemperature] = useState(null);
+export default function Weather({ setCity }) {
   const fetchWeather = (selectedCity, currentUnit) => {
-    let url = `https://api.openweathermap.org/data/2.5/weather?q=${selectedCity}&appid=0f8bc384a7c31b717a18cfe38a95ae06&units=${currentUnit}`;
+    let url = `https://api.openweathermap.org/data/2.5/weather?q=${selectedCity}&appid=535cacbb3f8a0df0aeb4790235b9541f&units=${currentUnit}`;
     axios.get(url).then((response) => {
       setRawTemperature(response.data.main.temp);
       updateWeatherData(response);
@@ -21,10 +20,10 @@ export default function Weather() {
     setUnit(newUnit);
   }
 
-  let [city, setCity] = useState("Monterey");
-  let [unit, setUnit] = useState("imperial");
-  let [loaded, setLoading] = useState("false");
-  let [weather, setWeather] = useState({
+  const [rawTemperature, setRawTemperature] = useState(null);
+  const [unit, setUnit] = useState("imperial");
+  const [loaded, setLoading] = useState("false");
+  const [weather, setWeather] = useState({
     temperature: null,
     windSpeed: null,
     windDirection: null,
@@ -40,6 +39,12 @@ export default function Weather() {
     let localTime = new Date((response.data.dt + timezoneOffset) * 1000);
     let formattedTime = localTime.toLocaleTimeString("en-US");
     let formattedDate = localTime.toLocaleDateString("en-US");
+
+    setWeather((prevState) => ({
+      ...prevState,
+      temperature: convertTemperature(rawTemperature, unit),
+    }));
+
     setWeather({
       ...weather,
       windSpeed: response.data.wind.speed,
@@ -52,13 +57,27 @@ export default function Weather() {
     });
     setLoading(true);
   }
+
+  function convertTemperature(kelvin, currentUnit) {
+    if (currentUnit === "imperial") {
+      return ((kelvin - 273.15) * 9) / 5 + 32;
+    } else if (currentUnit === "metric") {
+      return kelvin - 273.15;
+    } else {
+      return kelvin;
+    }
+  }
   function handleSubmit(event) {
     event.preventDefault();
-    fetchWeather(city);
+    setCity(weather.location);
+    fetchWeather(weather.location, unit);
   }
 
   function updateCity(event) {
-    setCity(event.target.value);
+    setWeather((prevState) => ({
+      ...prevState,
+      location: event.target.value,
+    }));
   }
 
   let form = (
